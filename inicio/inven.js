@@ -59,3 +59,50 @@ formEditar.addEventListener("submit", (e) => {
   alert("¡Producto editado correctamente!");
   modal.style.display = "none";
 });
+
+/*comprar*/ 
+// Referencias al modal
+const modal = document.getElementById("modalCompra");
+const cerrar = modal.querySelector(".cerrar");
+const modalTitulo = document.getElementById("modalTitulo");
+const modalImg = document.getElementById("modalImg");
+const modalMarca = document.getElementById("modalMarca");
+const modalCategoria = document.getElementById("modalCategoria");
+const modalPrecio = document.getElementById("modalPrecio");
+const modalCantidad = document.getElementById("modalCantidad");
+const modalTotal = document.getElementById("modalTotal");
+
+// Al hacer clic en un producto
+document.querySelectorAll(".producto").forEach(prod => {
+  prod.addEventListener("click", () => {
+    const nombre = prod.querySelector("h5").textContent;
+    const detalles = prod.querySelector("p").textContent.split("—");
+    const marca = detalles[0].trim();
+    const categoria = detalles[1].trim();
+    const img = prod.querySelector("img").src;
+
+    // Simulación de precio, puedes obtenerlo de la BD
+    const precio = 15.00; // Cambia por el precio real
+
+    modalTitulo.textContent = nombre;
+    modalImg.src = img;
+    modalMarca.textContent = "Marca: " + marca;
+    modalCategoria.textContent = "Categoría: " + categoria;
+    modalPrecio.textContent = precio.toFixed(2);
+    modalCantidad.value = 1;
+    modalTotal.textContent = precio.toFixed(2);
+
+    modal.style.display = "block";
+  });
+});
+
+// Actualizar total cuando cambie la cantidad
+modalCantidad.addEventListener("input", () => {
+  const precio = parseFloat(modalPrecio.textContent);
+  const cantidad = parseInt(modalCantidad.value) || 1;
+  modalTotal.textContent = (precio * cantidad).toFixed(2);
+});
+
+// Cerrar modal
+cerrar.onclick = () => modal.style.display = "none";
+window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };

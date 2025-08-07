@@ -33,111 +33,157 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
 </head>
 <body>
 
-  <header class="encabezado">
-    <div class="logo-area">
-      <img src="img/logo1.png" alt="Logo GSS" class="logo" />
-      <span class="titulo">GSS Panel</span>
-    </div>
-    <div class="saludo">
-      <h2>¡Hola Leo! <span class="emoji">👋</span></h2>
-      <p>Bienvenido de nuevo</p>
-    </div>
-    <a href="inicio.php" class="btn-cerrar">Cerrar sesión</a>
-  </header>
-
-  <div class="layout">
-    <aside class="sidebar">
-      <nav>
-        <ul class="menu">
-          <li><a href="inventario.php"><span>📦</span> Inventario</a></li>
-          <li><a href="merma.php"><span>🗑️</span> Merma</a></li>
-          <li><a href="proveedores.php"><span>🚚</span> Proveedores</a></li>
-          <li><a href="cuenta.php"><span>⚙️</span> Editar perfil</a></li>
-          <li><a href="reportes.php"><span>📊</span> Reportes</a></li>
-          <li><a href="inicio.php"><span>⬅️</span> Atrás</a></li>
-          <li><a href="ayuda.php"><span>❓</span> Ayuda</a></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <main>
-      <section class="tabla-simulacion">
-        <h3>📈 Simulación de ventas y pérdidas por mes</h3>
-        <canvas id="graficoVentas" height="120"></canvas>
-      </section>
-    </main>
+<header class="encabezado">
+  <div class="logo-area">
+    <img src="img/logo1.png" alt="Logo GSS" class="logo" />
+    <span class="titulo">GSS Panel</span>
   </div>
+  <div class="saludo">
+    <h2>¡Hola Leo! <span class="emoji">👋</span></h2>
+    <p>Bienvenido de nuevo</p>
+  </div>
+  <a href="inicio.php" class="btn-cerrar">Cerrar sesión</a>
+</header>
 
-  <script>
-    const ctx = document.getElementById('graficoVentas').getContext('2d');
-    const meses = <?= json_encode($meses) ?>;
-    const compras = <?= json_encode($compras) ?>;
-    const devoluciones = <?= json_encode($devoluciones) ?>;
-    const danos = <?= json_encode($danos) ?>;
-    const netas = compras.map((c, i) => c - devoluciones[i] - danos[i]);
+<div class="layout">
+  <aside class="sidebar">
+    <nav>
+      <ul class="menu">
+        <li><a href="inven.php"><span>⬅️</span> inicio</a></li>
+        <li><a href="inventario.php"><span>📦</span> Inventario</a></li>
+        <li><a href="merma.php"><span>🗑️</span> Merma</a></li>
+        <li><a href="proveedores.php"><span>🚚</span> Proveedores</a></li>
+        <li><a href="editar_usuario.php"><span>⚙️</span> Editar perfil</a></li>
+        <li><a href="Reportes.php"><span>📊</span> Reportes</a></li>
+        <li><a href="ayuda.php"><span>❓</span> Ayuda</a></li>
+      </ul>
+    </nav>
+  </aside>
 
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: meses,
-        datasets: [
-          {
-            label: 'Devoluciones',
-            data: devoluciones,
-            backgroundColor: '#f39c12'
-          },
-          {
-            label: 'Daños',
-            data: danos,
-            backgroundColor: '#e74c3c'
-          },
-          {
-            label: 'Ventas netas',
-            data: netas,
-            backgroundColor: '#3498db',
-            borderRadius: 6
-          }
-        ]
+  <main>
+    <section class="tabla-simulacion">
+      <h3>📈 Simulación de ventas y pérdidas por mes</h3>
+      <canvas id="graficoVentas" height="120"></canvas>
+    </section>
+  </main>
+</div>
+
+<script>
+const ctx = document.getElementById('graficoVentas').getContext('2d');
+const meses        = <?= json_encode($meses) ?>;
+const compras      = <?= json_encode($compras) ?>;
+const devoluciones = <?= json_encode($devoluciones) ?>;
+const danos        = <?= json_encode($danos) ?>;
+const netas        = compras.map((c, i) => c - devoluciones[i] - danos[i]);
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: [
+      {
+        label: 'Devoluciones',
+        data: devoluciones,
+        backgroundColor: 'rgba(243, 156, 18, 0.9)',
+        borderColor: '#d35400',
+        borderWidth: 1
       },
-      options: {
-        responsive: true,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return ` ${context.dataset.label}: ${context.parsed.y}`;
-              }
-            }
-          },
-          legend: {
-            position: 'top',
-            labels: {
-              font: {
-                size: 13
-              }
-            }
-          },
-          title: {
-            display: true,
-            text: 'Comparativa de ventas netas y pérdidas por mes',
-            font: {
-              size: 16
-            }
-          }
-        },
-        scales: {
-          x: { stacked: true },
-          y: {
-            beginAtZero: true,
-            stacked: true,
-            title: {
-              display: true,
-              text: 'Cantidad (unidades)'
-            }
-          }
+      {
+        label: 'Daños',
+        data: danos,
+        backgroundColor: 'rgba(231, 76, 60, 0.9)',
+        borderColor: '#c0392b',
+        borderWidth: 1
+      },
+      {
+        label: 'Ventas netas',
+        data: netas,
+        backgroundColor: 'rgba(52, 152, 219, 0.95)',
+        borderColor: '#2980b9',
+        borderWidth: 1,
+        borderRadius: 6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    elements: {
+      bar: {
+        borderWidth: 1,
+        borderSkipped: false
+      }
+    },
+    animation: {
+      duration: 1000,
+      easing: 'easeOutExpo'
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: context => ` ${context.dataset.label}: ${context.parsed.y}`
+        }
+      },
+      legend: {
+        position: 'top',
+        labels: {
+          font: { size: 13 }
+        }
+      },
+      title: {
+        display: true,
+        text: 'Comparativa de ventas netas y pérdidas por mes',
+        font: { size: 16 }
+      }
+    },
+    scales: {
+      x: { stacked: true },
+      y: {
+        beginAtZero: true,
+        stacked: true,
+        title: {
+          display: true,
+          text: 'Cantidad (unidades)'
         }
       }
-    });
-  </script>
+    }
+  }
+});
+</script>
+
+<style>
+.tabla-simulacion {
+  margin-top: -20px;
+  padding: 30px 20px 30px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f9fbff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  animation: fadeIn 0.8s ease;
+}
+
+.tabla-simulacion h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+#graficoVentas {
+  width: 100% !important;
+  max-width: 850px;
+  margin: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+
 </body>
 </html>

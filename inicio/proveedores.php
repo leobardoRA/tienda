@@ -1,32 +1,33 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 $conexion = mysqli_connect("localhost", "root", "", "abarrotera");
 if (!$conexion) {
-  die("Error de conexión: " . mysqli_connect_error());
+    die("Error de conexión: " . mysqli_connect_error());
 }
 mysqli_set_charset($conexion, "utf8");
-
-// Aquí podrías obtener proveedores desde la base de datos si lo deseas
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Panel GSS - Simulación de Merma</title>
-  <link rel="stylesheet" href="inven.css?v=3" />
+  <title>Panel GSS - Proveedores</title>
+  <link rel="stylesheet" href="inven.css?v=5" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ... tus estilos iguales ... */
+    /* No los repito aquí para que sea más corto */
+  </style>
 </head>
 <body>
-
   <header class="encabezado">
     <div class="logo-area">
       <img src="img/logo1.png" alt="Logo GSS" class="logo" />
       <span class="titulo">GSS Panel</span>
     </div>
     <div class="saludo">
-      <h2>¡Hola Leo! <span class="emoji">👋</span></h2>
-      <p>Bienvenido de nuevo</p>
+      <h2>¡Hola! <span class="emoji">👋</span></h2>
     </div>
     <a href="inicio.php" class="btn-cerrar">Cerrar sesión</a>
   </header>
@@ -35,20 +36,20 @@ mysqli_set_charset($conexion, "utf8");
     <aside class="sidebar">
       <nav>
         <ul class="menu">
-          <li><a href="inventario.php"><span>📦</span> Inventario</a></li>
-          <li><a href="merma.php"><span>🗑️</span> Merma</a></li>
-          <li><a href="proveedores.php"><span>🚚</span> Proveedores</a></li>
-          <li><a href="cuenta.php"><span>⚙️</span> Editar perfil</a></li>
-          <li><a href="reportes.php"><span>📊</span> Reportes</a></li>
-          <li><a href="inicio.php"><span>⬅️</span> Atrás</a></li>
-          <li><a href="ayuda.php"><span>❓</span> Ayuda</a></li>
+          <li><a href="inven.php">⬅️ inicio</a></li>
+          <li><a href="inventario.php">📦 Inventario</a></li>
+          <li><a href="merma.php">🗑️ Merma</a></li>
+          <li><a href="proveedores.php">🚚 Proveedores</a></li>
+          <li><a href="editar_usuario.php">⚙️ Editar perfil</a></li>
+          <li><a href="Reportes.php">📊 Reportes</a></li>
+          <li><a href="ayuda.php">❓ Ayuda</a></li>
         </ul>
       </nav>
     </aside>
 
     <main class="contenido-principal">
       <section class="panel-central">
-        <div class="card-panel dividido">
+        <div class="card-panel">
           <div class="columna izquierda">
             <div class="seccion">
               <label for="miTienda">🏬 Mi tienda:</label>
@@ -64,43 +65,36 @@ mysqli_set_charset($conexion, "utf8");
               <input type="date" value="<?= date('Y-m-d') ?>" id="fechaEntrega" />
             </div>
 
-            <div class="buscador-productos">
-              <input type="text" id="busquedaInput" placeholder="🔍 Buscar producto, marca o categoría..." oninput="filtrarProductos()" />
+            <div class="seccion buscador-productos">
+              <label for="busquedaInput">🔍 Buscar proveedor:</label>
+              <input type="text" id="busquedaInput" placeholder="Buscar por nombre..." oninput="filtrarProductos()" />
             </div>
           </div>
 
           <div class="columna derecha">
             <div class="proveedores-lista">
-              <div class="proveedor-card">
-                <img src="img/alpura.png" alt="Alpura" />
-                <span>Alpura – Juan Hernández</span>
-              </div>
-              <div class="proveedor-card">
-                <img src="img/bimbo.png" alt="Bimbo" />
-                <span>Bimbo – Lázaro Bravo</span>
-              </div>
-              <div class="proveedor-card">
-                <img src="img/coca.png" alt="Coca Cola" />
-                <span>Coca Cola – Fernando Lara</span>
-              </div>
-              <div class="proveedor-card">
-                <img src="img/barcel.png" alt="Barcel" />
-                <span>Barcel – Juan Pablo</span>
-              </div>
+              <?php
+              $query = "SELECT * FROM proveedores";
+              $resultado = mysqli_query($conexion, $query);
+              if ($resultado && mysqli_num_rows($resultado) > 0) {
+                while ($fila = mysqli_fetch_assoc($resultado)) {
+                  $logo = htmlspecialchars($fila['logo']);
+                  $empresa = htmlspecialchars($fila['nombre_empresa']);
+                  $contacto = htmlspecialchars($fila['nombre_contacto']);
+                  echo '
+                  <div class="proveedor-card">
+                    <img src="' . $logo . '" alt="' . $empresa . '" />
+                    <span>' . $empresa . ' – ' . $contacto . '</span>
+                  </div>';
+                }
+              } else {
+                echo "<p>No hay proveedores registrados.</p>";
+              }
+              ?>
             </div>
           </div>
         </div>
-
-        <footer class="panel-footer">
-          <div class="contacto-box">
-            <span>Contáctanos</span>
-            <div class="redes-iconos">
-              <a href="https://facebook.com"><img src="img/facebook.png" alt="Facebook" /></a>
-              <a href="https://wa.me/"><img src="img/whatsapp.png" alt="WhatsApp" /></a>
-            </div>
-          </div>
-          <a class="ayuda-enlace" href="ayuda.php">¿Necesitas ayuda?</a>
-        </footer>
+        <a class="ayuda-enlace" href="ayuda.php">¿Necesitas ayuda?</a>
       </section>
     </main>
   </div>

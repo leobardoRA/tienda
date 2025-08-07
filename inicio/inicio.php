@@ -1,41 +1,53 @@
 <?php
 session_start();
-$conexion = mysqli_connect("localhost", "root", "", "abarrotera");
-if (!$conexion) {
-  die("Error de conexión: " . mysqli_connect_error());
+
+$conn = new mysqli("localhost", "root", "", "abarrotera");
+if ($conn->connect_error) {
+  die("Error de conexión: " . $conn->connect_error);
 }
-mysqli_set_charset($conexion, "utf8");
+$conn->set_charset("utf8");
 
-// Procesar formulario
+$error = "";
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  $email = trim($_POST['email']);
-  $pass = trim($_POST['password']);
+  $correo = strtolower(trim($_POST["email"] ?? ''));
+  $passIngresada = $_POST["password"] ?? '';
 
-  // Buscar usuario
-  $query = "SELECT * FROM usuarios WHERE email = '$email'";
-  $resultado = mysqli_query($conexion, $query);
+  $stmt = $conn->prepare("SELECT id_usuario, contraseña FROM registro WHERE correo = ?");
+  if ($stmt) {
+    $stmt->bind_param("s", $correo);
+    $stmt->execute();
+    $stmt->store_result();
 
-  if ($fila = mysqli_fetch_assoc($resultado)) {
-    // Verifica contraseña (asumiendo password_hash)
-    if (password_verify($pass, $fila['password'])) {
-      $_SESSION['usuario'] = $fila['email'];
-      header("Location: inventario.php");
-      exit;
+    if ($stmt->num_rows > 0) {
+      $stmt->bind_result($id_usuario, $passEnBase);
+      $stmt->fetch();
+
+      if (password_verify($passIngresada, $passEnBase)) {
+        $_SESSION["user_id"] = $id_usuario; // ⚠️ Este es el importante
+        $_SESSION["correo"] = $correo;
+
+        header("Location: inven.php");
+        exit();
+      } else {
+        $error = "Contraseña incorrecta.";
+      }
     } else {
-      $error = "Contraseña incorrecta.";
+      $error = "Correo no registrado.";
     }
+    $stmt->close();
   } else {
-    $error = "Usuario no encontrado.";
+    $error = "Error en la consulta: " . $conn->error;
   }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GSS - Iniciar sesión</title>
-  <link rel="stylesheet" href="inven.css?v=1" />
+<link rel="stylesheet" href="inven.css?v=2" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
@@ -57,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <form method="POST">
         <div class="grupo">
           <label for="email" class="etiqueta">Correo electrónico</label>
-          <input type="email" name="email" id="email" placeholder="Ingresa tu email" required />
+          <input type="email" name="email" id="email" placeholder="Ingresa tu correo" required />
         </div>
 
         <div class="grupo">
@@ -69,16 +81,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <a href="olvi.php" class="forgot">¿Has olvidado la contraseña?</a>
         </div>
 
-        <?php if (isset($error)): ?>
-          <p style="color:red; margin-bottom: 1rem;"><?= $error ?></p>
+        <?php if ($error): ?>
+          <p class="mensaje-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <button type="submit" class="btn-principal">Iniciar sesión</button>
       </form>
 
       <div class="enlaces-extra">
-        <a href="registro.php" class="link">Crea una cuenta</a>
-        <a href="ayuda.html" class="link">Ayuda</a>
+       <a href="registro.php" class="link">Crea una cuenta</a>
+        <a href="ayuda.php" class="link">Ayuda</a>
       </div>
     </section>
   </div>

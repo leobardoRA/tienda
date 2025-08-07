@@ -1,13 +1,40 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+session_start(); // Necesario para capturar al usuario en sesión
 
 $conexion = mysqli_connect("localhost", "root", "", "abarrotera");
+if (!$conexion) { die("Error de conexión: " . mysqli_connect_error()); }
+mysqli_set_charset($conexion, "utf8");
+
+$user_id = $_SESSION["user_id"] ?? 0;
+
+// Conexión a la base de datos
+$conexion = mysqli_connect("localhost", "root", "", "abarrotera");
 if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
+  die("Error de conexión: " . mysqli_connect_error());
 }
 mysqli_set_charset($conexion, "utf8");
+
+// Manejo del formulario POST
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  $producto  = trim($_POST['producto']);
+  $marca     = trim($_POST['marca']);
+  $categoria = trim($_POST['categoria']);
+  $stock     = (int) $_POST['stock'];
+  $precio    = (float) $_POST['precio'];
+  $user_id   = $_SESSION['user_id'];
+
+  if ($producto && $marca && $categoria && $stock >= 0 && $precio >= 0) {
+    $stmt = mysqli_prepare($conexion, "INSERT INTO inventario (user_id, producto, marca, categoria, stock, precio) VALUES (?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "isssid", $user_id, $producto, $marca, $categoria, $stock, $precio);
+    mysqli_stmt_execute($stmt);
+    header("Location: inventario.php");
+    exit;
+  }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,17 +46,16 @@ mysqli_set_charset($conexion, "utf8");
 </head>
 <body>
 
-  <!-- Encabezado -->
   <header class="encabezado">
     <div class="logo-area">
       <img src="img/logo1.png" alt="Logo GSS" class="logo" />
       <span class="titulo">GSS Panel</span>
     </div>
     <div class="saludo">
-      <h2>¡Hola Leo! <span class="emoji">👋</span></h2>
+     <h2>¡Hola Leo! <span class="emoji">👋</span></h2>
       <p>Bienvenido de nuevo</p>
     </div>
-    <a href="logout.php" class="btn-cerrar">Cerrar sesión</a>
+    <a href="inicio.php" class="btn-cerrar">Cerrar sesión</a>
   </header>
 
   <div class="layout">
@@ -40,7 +66,7 @@ mysqli_set_charset($conexion, "utf8");
           <li><a href="inventario.php"><span>📦</span> Inventario</a></li>
           <li><a href="merma.php"><span>🗑️</span> Merma</a></li>
           <li><a href="proveedores.php"><span>🚚</span> Proveedores</a></li>
-          <li><a href="cuenta.php"><span>⚙️</span> Editar perfil</a></li>
+          <li><a href="editar_usuario.php"><span>⚙️</span> Editar perfil</a></li>
           <li><a href="Reportes.php"><span>📊</span> Reportes</a></li>
           <li><a href="ayuda.php"><span>❓</span> Ayuda</a></li>
         </ul>
@@ -223,7 +249,7 @@ thead th {
   text-align: center;
   padding: 0.75rem;
   font-weight: 600;
-}
+}--
 
 tbody td {
   padding: 0.6rem;

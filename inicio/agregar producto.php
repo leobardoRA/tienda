@@ -1,23 +1,32 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+session_start(); // Necesario para capturar al usuario en sesión
+
 $conexion = mysqli_connect("localhost", "root", "", "abarrotera");
+if (!$conexion) { die("Error de conexión: " . mysqli_connect_error()); }
+mysqli_set_charset($conexion, "utf8");
 if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
+  die("Error de conexión: " . mysqli_connect_error());
 }
 mysqli_set_charset($conexion, "utf8");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $producto = $_POST['producto'];
-    $marca = $_POST['marca'];
-    $categoria = $_POST['categoria'];
-    $stock = (int)$_POST['stock'];
-    $precio = (float)$_POST['precio'];
+  $producto  = trim($_POST['producto']);
+  $marca     = trim($_POST['marca']);
+  $categoria = trim($_POST['categoria']);
+  $stock     = (int) $_POST['stock'];
+  $precio    = (float) $_POST['precio'];
+  $user_id   = $_SESSION['user_id'];
 
-    $stmt = mysqli_prepare($conexion, "INSERT INTO inventario (producto, marca, categoria, stock, precio) VALUES (?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "sssdi", $producto, $marca, $categoria, $stock, $precio);
+  if ($producto && $marca && $categoria && $stock >= 0 && $precio >= 0) {
+    $stmt = mysqli_prepare($conexion, "INSERT INTO inventario (user_id, producto, marca, categoria, stock, precio) VALUES (?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "isssid", $user_id, $producto, $marca, $categoria, $stock, $precio);
     mysqli_stmt_execute($stmt);
 
     header("Location: inventario.php");
     exit;
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -31,7 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
-
     body {
       background: #f0f4f8;
       display: flex;
@@ -40,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       height: 100vh;
       margin: 0;
     }
-
     .form-container {
       background-color: #fff;
       padding: 30px 40px;
@@ -49,20 +56,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       width: 100%;
       max-width: 480px;
     }
-
     .form-container h2 {
       margin-bottom: 20px;
       color: #333;
       text-align: center;
     }
-
     label {
       font-weight: 600;
       display: block;
       margin-bottom: 6px;
       margin-top: 15px;
     }
-
     input {
       width: 100%;
       padding: 10px;
@@ -70,12 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       border: 1px solid #ccc;
       transition: border 0.3s ease;
     }
-
     input:focus {
       border-color: #007BFF;
       outline: none;
     }
-
     button {
       margin-top: 25px;
       width: 100%;
@@ -89,11 +91,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     @media (max-width: 500px) {
       .form-container {
         padding: 20px;
@@ -115,10 +115,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <input type="text" name="categoria" required>
 
       <label>Stock:</label>
-      <input type="number" name="stock" required>
+      <input type="number" name="stock" min="0" required>
 
       <label>Precio:</label>
-      <input type="number" step="0.01" name="precio" required>
+      <input type="number" step="0.01" name="precio" min="0" required>
 
       <button type="submit">Guardar</button>
     </form>
