@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resumen de Inventario</title>
+  <link rel="stylesheet" href="../css/inven.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header class="encabezado">
+    <div class="logo-area">
+      <img src="../img/logo.png" alt="Logo GSS" class="logo" />
+      <span class="titulo">GSS Panel</span>
+    </div>
+    <div class="saludo">
+      <h2>¡Hola! <span class="emoji">👋</span></h2>
+      <p>Bienvenido de nuevo</p>
+    </div>
+    <a href="../php/inicio.php" class="btn-cerrar">Cerrar sesión</a>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <ul class="menu">
+          <li><a href="../html/inven.html">⬅️ inicio</a></li>
+          <li><a href="../html/inventario.html">📦 Inventario</a></li>
+          <li><a href="../html/merma.html">🗑️ Merma</a></li>
+          <li><a href="../html/proveedores.html">🚚 Proveedores</a></li>
+          <li><a href="../html/editar_usuario.html">⚙️ Editar perfil</a></li>
+          <li><a href="../html/reportes.html">📊 Reportes</a></li>
+          <li><a href="../html/ayuda.html">❓ Ayuda</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="resumen-inventario">
+        <!-- Estadísticas -->
+        <div class="stats">
+          <div class="stat">📦 Productos totales: 
+            <strong id="totalProductosStat">0</strong>
+          </div>
+          <div class="stat">💰 Valor inventario: 
+            <strong id="valorInventarioStat">$0.00</strong>
+          </div>
+        </div>
+
+        <!-- Buscador -->
+        <div class="buscador-productos">
+          <input type="text" id="busquedaInput" placeholder="🔍 Buscar producto, marca o categoría..." />
+        </div>
+
+        <!-- Categorías -->
+        <section class="categorias-scroll">
+          <h4>Categorías</h4>
+          <div class="contenedor-categorias">
+            <div class="categoria activa" data-categoria="*">Todas</div>
+            <div class="categoria" data-categoria="Bebidas">Bebidas</div>
+            <div class="categoria" data-categoria="frituras">Snacks y frituras</div>
+            <div class="categoria" data-categoria="Cereales">Cereales</div>
+            <div class="categoria" data-categoria="Dulces">Dulces</div>
+            <div class="categoria" data-categoria="Lácteos">Lácteos</div>
+            <div class="categoria" data-categoria="Carnes frías">Carnes frías</div>
+            <div class="categoria" data-categoria="Limpieza">Limpieza</div>
+            <div class="categoria" data-categoria="Higiene personal">Higiene personal</div>
+            <div class="categoria" data-categoria="Mascotas">Mascotas</div>
+          </div>
+        </section>
+
+        <!-- Grilla de productos -->
+        <div class="grid-productos">
+          <!-- Se carga dinámicamente desde cargar_grilla.php -->
+        </div>
+
+        <!-- Carrito lateral -->
+        <div class="carrito-lateral" id="carritoLateral">
+          <h3>🧾 Carrito</h3>
+          <ul id="lista-carrito"></ul>
+          <p id="total-carrito">Total: $0.00</p>
+          <button id="btn-finalizar" disabled>Finalizar compra</button>
+        </div>
+
+        <!-- Botón flotante -->
+        <div class="carrito-boton" id="toggleCarrito">
+          🛒
+          <span class="badge" id="badgeCarrito">0</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Script principal -->
+  <script src="../js/inven.js"></script>
+</body>
+</html>

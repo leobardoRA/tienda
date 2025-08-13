@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Merma</title>
+  <link rel="stylesheet" href="../css/inven.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="encabezado">
+    <div class="logo-area">
+      <img src="../img/logo.png" alt="Logo GSS" class="logo" />
+      <span class="titulo">GSS Panel</span>
+    </div>
+    <div class="saludo">
+      <h2>¡Hola! <span class="emoji">👋</span></h2>
+      <p>Bienvenido de nuevo</p>
+    </div>
+    <a href="../html/inicio.html" class="btn-cerrar">Cerrar sesión</a>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <ul class="menu">
+          <li><a href="../html/inven.html">⬅️ inicio</a></li>
+          <li><a href="../html/inventario.html">📦 Inventario</a></li>
+          <li><a href="../html/merma.html">🗑️ Merma</a></li>
+          <li><a href="../html/proveedores.html">🚚 Proveedores</a></li>
+          <li><a href="../html/editar_usuario.html">⚙️ Editar perfil</a></li>
+          <li><a href="../html/reportes.html">📊 Reportes</a></li>
+          <li><a href="../html/ayuda.html">❓ Ayuda</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="merma">
+        <h3>🗑️ Registro de merma</h3>
+        <form class="form-grid" action="#" method="post">
+          <div class="grupo">
+            <label>Producto</label>
+            <input type="text" name="producto" placeholder="Ej. Pan Bimbo Blanco" required>
+          </div>
+          <div class="grupo">
+            <label>Motivo de merma</label>
+            <select name="motivo" required>
+              <option value="">Selecciona una opción</option>
+              <option value="caducado">Producto caducado</option>
+              <option value="roto">Producto roto</option>
+              <option value="devuelto">Devuelto por cliente</option>
+            </select>
+          </div>
+          <div class="grupo">
+            <label>Fecha de merma</label>
+            <input type="date" name="fecha" required>
+          </div>
+          <div class="grupo">
+            <label>Cantidad</label>
+            <input type="number" name="cantidad" placeholder="1" min="1" required>
+          </div>
+          <div class="grupo full">
+            <button type="submit">Registrar merma</button>
+          </div>
+        </form>
+
+        <hr>
+        <h3>📋 Historial de mermas</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>PRODUCTO</th>
+              <th>MOTIVO</th>
+              <th>FECHA</th>
+              <th>CANTIDAD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pan Bimbo Blanco</td>
+              <td>Caducado</td>
+              <td>12/08/2025</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>Leche Lala Entera</td>
+              <td>Roto</td>
+              <td>10/08/2025</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td colspan="4" style="text-align:center; font-style:italic;">No hay más registros de merma.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>

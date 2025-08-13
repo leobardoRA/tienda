@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel GSS - Proveedores</title>
+  <link rel="stylesheet" href="../css/inven.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Estilos mejorados para panel-central */
+    .panel-central {
+      padding: 1rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    .card-panel {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background: #f5f8fa;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .columna {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .columna.izquierda label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+      color: #333;
+    }
+    .columna.izquierda select,
+    .columna.izquierda input[type="date"],
+    .columna.izquierda input[type="text"] {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    .columna.izquierda select:focus,
+    .columna.izquierda input[type="date"]:focus,
+    .columna.izquierda input[type="text"]:focus {
+      outline: none;
+      border-color: #008cff;
+      box-shadow: 0 0 5px #008cff44;
+    }
+    .proveedores-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    .proveedor-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+      transition: background-color 0.3s;
+      cursor: default;
+    }
+    .proveedor-card:hover {
+      background-color: #e6f0ff;
+    }
+    .proveedor-card img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    .proveedor-card span {
+      font-weight: 500;
+      color: #222;
+    }
+    .ayuda-enlace {
+      display: inline-block;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #008cff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .ayuda-enlace:hover {
+      color: #005fa3;
+    }
+    #noResultsMsg {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #666;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="encabezado">
+    <div class="logo-area">
+     <img src="../img/logo.png" alt="Logo GSS" class="logo" />
+      <span class="titulo">GSS Panel</span>
+    </div>
+    <div class="saludo">
+      <h2>¡Hola! <span class="emoji">👋</span></h2>
+    </div>
+    <a href="inicio.php" class="btn-cerrar">Cerrar sesión</a>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <ul class="menu">
+            <li><a href="../html/inven.html">⬅️ inicio</a></li>
+          <li><a href="../html/inventario.html">📦 Inventario</a></li>
+          <li><a href="../html/merma.html">🗑️ Merma</a></li>
+          <li><a href="../html/proveedores.html">🚚 Proveedores</a></li>
+          <li><a href="../html/editar_usuario.html">⚙️ Editar perfil</a></li>
+          <li><a href="../html/reportes.html">📊 Reportes</a></li>
+          <li><a href="../html/ayuda.html">❓ Ayuda</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="contenido-principal">
+      <section class="panel-central">
+        <div class="card-panel">
+          <div class="columna izquierda">
+            <div class="seccion">
+              <label for="miTienda">🏬 Mi tienda:</label>
+              <select id="miTienda" aria-label="Seleccionar tienda">
+                <option selected>Central</option>
+                <option>Sur</option>
+                <option>Online</option>
+              </select>
+            </div>
+
+            <div class="seccion">
+              <label for="fechaEntrega">📅 Fecha de entrega:</label>
+              <input type="date" value="2025-08-12" id="fechaEntrega" aria-label="Seleccionar fecha de entrega" />
+            </div>
+
+            <div class="seccion buscador-productos">
+              <label for="busquedaInput">🔍 Buscar proveedor:</label>
+              <input type="search" id="busquedaInput" placeholder="Buscar por nombre..." oninput="filtrarProductos()" aria-label="Buscar proveedor" />
+            </div>
+          </div>
+
+          <div class="columna derecha">
+            <div class="proveedores-lista" id="proveedoresLista">
+              <div class="proveedor-card">
+                <img src="img/proveedor1.png" alt="Proveedor Uno" />
+                <span>Proveedor Uno – Juan Pérez</span>
+              </div>
+              <div class="proveedor-card">
+                <img src="img/proveedor2.png" alt="Proveedor Dos" />
+                <span>Proveedor Dos – María López</span>
+              </div>
+              <div class="proveedor-card">
+                <img src="img/proveedor3.png" alt="Proveedor Tres" />
+                <span>Proveedor Tres – Carlos Martínez</span>
+              </div>
+            </div>
+            <p id="noResultsMsg">No se encontraron proveedores que coincidan.</p>
+          </div>
+        </div>
+        <a class="ayuda-enlace" href="ayuda.php">¿Necesitas ayuda?</a>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function filtrarProductos() {
+      const input = document.getElementById('busquedaInput');
+      const filtro = input.value.toLowerCase();
+      const proveedores = document.querySelectorAll('.proveedor-card');
+      let visibles = 0;
+
+      proveedores.forEach(card => {
+        const texto = card.textContent.toLowerCase();
+        if (texto.includes(filtro)) {
+          card.style.display = 'flex';
+          visibles++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Mostrar mensaje si no hay resultados
+      const msg = document.getElementById('noResultsMsg');
+      msg.style.display = visibles === 0 ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

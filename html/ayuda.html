@@ -1,28 +1,109 @@
-<?php
-session_start();
-
-if (!isset($_SESSION["usuario_id"])) {
-  header("Location: inicio.php");
-  exit();
-}
-
-$conexion = mysqli_connect("localhost", "root", "", "abarrotera");
-if (!$conexion) { die("Error de conexión: " . mysqli_connect_error()); }
-mysqli_set_charset($conexion, "utf8");
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <title>Panel GSS - Ayuda</title>
-   <link rel="stylesheet" href="inven.css?v=5" />
+  <link rel="stylesheet" href="../css/inven.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/inventario.css" />
+  <style>
+    /* ======= Layout general ======= */
+    .contenido-ayuda {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .caja-scrollable {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    /* ======= Tarjetas ======= */
+    .tarjetas-ayuda {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      min-height: 200px;
+    }
+
+    .card:hover {
+      transform: scale(1.04);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+
+    .card i.icono {
+      font-size: 42px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .card h4 {
+      font-size: 22px;
+      margin: 12px 0 8px;
+    }
+
+    .card p {
+      font-size: 15px;
+      color: #666;
+    }
+
+    /* ======= Modales ======= */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-contenido {
+      position: relative;
+      background: #fff;
+      margin: 10% auto;
+      padding: 30px;
+      max-width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    .cerrar {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #444;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .cerrar:hover {
+      color: #e74c3c;
+    }
+  </style>
 </head>
 <body>
 
   <header class="encabezado">
     <div class="logo-area">
-      <img src="img/logo1.png" alt="Logo GSS" class="logo" />
+      <img src="../img/logo.png" alt="Logo GSS" class="logo" />
       <span class="titulo">GSS Panel</span>
     </div>
     <div class="saludo">
@@ -35,13 +116,13 @@ mysqli_set_charset($conexion, "utf8");
     <aside class="sidebar">
       <nav>
         <ul class="menu">
-          <li><a href="inven.php">⬅️ inicio</a></li>
-          <li><a href="inventario.php">📦 Inventario</a></li>
-          <li><a href="merma.php">🗑️ Merma</a></li>
-          <li><a href="proveedores.php">🚚 Proveedores</a></li>
-          <li><a href="cuenta.php">⚙️ Editar perfil</a></li>
-          <li><a href="Reportes.php">📊 Reportes</a></li>
-          <li><a href="ayuda.php">❓ Ayuda</a></li>
+          <li><a href="../html/inven.html">⬅️ inicio</a></li>
+          <li><a href="../html/inventario.html">📦 Inventario</a></li>
+          <li><a href="../html/merma.html">🗑️ Merma</a></li>
+          <li><a href="../html/proveedores.html">🚚 Proveedores</a></li>
+          <li><a href="../html/editar_usuario.html">⚙️ Editar perfil</a></li>
+          <li><a href="../html/reportes.html">📊 Reportes</a></li>
+          <li><a href="../html/ayuda.html">❓ Ayuda</a></li>
         </ul>
       </nav>
     </aside>
@@ -152,156 +233,10 @@ mysqli_set_charset($conexion, "utf8");
     function abrirModal(id) {
       document.getElementById(id).style.display = "block";
     }
-
     function cerrarModal(id) {
       document.getElementById(id).style.display = "none";
     }
   </script>
-<style>
-.tarjetas-ayuda {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
 
-.card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.card i.icono {
-  font-size: 36px;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.card h4 {
-  font-size: 18px;
-  margin: 10px 0 5px;
-}
-
-.card p {
-  font-size: 14px;
-  color: #666;
-}
-
-/* MODALES */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5);
-}
-
-.modal-contenido {
-  background: #fff;
-  margin: 10% auto;
-  padding
-  .caja-scrollable {
-  max-width: 1100px;  /* antes puede estar en 900px o menos */
-  margin: 0 auto;
-  padding: 20px;
-}
-.contenido-ayuda {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-</style>
-<style>
-  /* 🛠 Ampliar y pulir el área de tarjetas de ayuda */
-
-.contenido-ayuda {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.caja-scrollable {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px;
-  max-height: none;       /* Evita que se corte si hay muchas tarjetas */
-  overflow-y: visible;    /* Si lo quieres scrollable, cámbialo a auto */
-}
-
-/* 🎯 Tarjetas con más cuerpo */
-.tarjetas-ayuda {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); /* Columnas más generosas */
-  gap: 30px;
-  margin-top: 30px;
-}
-
-.card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 30px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  min-height: 200px;
-}
-
-.card:hover {
-  transform: scale(1.04);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-}
-
-.card i.icono {
-  font-size: 42px;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.card h4 {
-  font-size: 22px;
-  margin: 12px 0 8px;
-}
-
-.card p {
-  font-size: 15px;
-  color: #666;
-}
-.cerrar {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #444;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.cerrar:hover {
-  color: #e74c3c;
-}
-.modal-contenido {
-  position: relative; /* Necesario para que la "x" se ubique dentro */
-  background: #fff;
-  margin: 10% auto;
-  padding: 30px;
-  max-width: 600px;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-}
-</style>
 </body>
 </html>
