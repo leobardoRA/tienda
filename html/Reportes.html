@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel GSS</title>
+  <link rel="stylesheet" href="../css/inven.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header class="encabezado">
+  <div class="logo-area">
+    <img src="../img/logo.png" alt="Logo GSS" class="logo" />
+    <span class="titulo">GSS Panel</span>
+  </div>
+  <div class="saludo">
+    <h2>¡Hola Leo! <span class="emoji">👋</span></h2>
+    <p>Bienvenido de nuevo</p>
+  </div>
+  <a href="inicio.php" class="btn-cerrar">Cerrar sesión</a>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <nav>
+      <ul class="menu">
+          <li><a href="../html/inven.html">⬅️ inicio</a></li>
+          <li><a href="../html/inventario.html">📦 Inventario</a></li>
+          <li><a href="../html/merma.html">🗑️ Merma</a></li>
+          <li><a href="../html/proveedores.html">🚚 Proveedores</a></li>
+          <li><a href="../html/editar_usuario.html">⚙️ Editar perfil</a></li>
+          <li><a href="../html/reportes.html">📊 Reportes</a></li>
+          <li><a href="../html/ayuda.html">❓ Ayuda</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="contenido-principal">
+    <!-- Contenido vacío -->
+    <section style="padding: 2rem; text-align: center; color: #666;">
+      <h3>Panel vacío</h3>
+      <main class="contenido-principal">
+  <section style="max-width: 900px; margin: 2rem auto; font-family: 'Poppins', sans-serif; color:#333;">
+    <h2 style="text-align:center; margin-bottom: 2rem; font-weight: 700;">Panel de Estadísticas</h2>
+
+    <!-- Cards de resumen -->
+    <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;">
+      <div style="flex:1 1 200px; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+                  color: white; padding: 1.8rem 2rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(101, 70, 255, 0.3);
+                  display: flex; align-items: center; gap: 1rem;">
+        <i class="fas fa-box fa-3x" style="opacity: 0.85;"></i>
+        <div>
+          <h3 style="margin: 0; font-size: 1.8rem; font-weight: 700;">1,250</h3>
+          <p style="margin: 0; font-weight: 500;">Productos en inventario</p>
+        </div>
+      </div>
+
+      <div style="flex:1 1 200px; background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+                  color: white; padding: 1.8rem 2rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(255, 70, 70, 0.3);
+                  display: flex; align-items: center; gap: 1rem;">
+        <i class="fas fa-truck fa-3x" style="opacity: 0.85;"></i>
+        <div>
+          <h3 style="margin: 0; font-size: 1.8rem; font-weight: 700;">58</h3>
+          <p style="margin: 0; font-weight: 500;">Proveedores activos</p>
+        </div>
+      </div>
+
+      <div style="flex:1 1 200px; background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+                  color: white; padding: 1.8rem 2rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(50, 200, 170, 0.3);
+                  display: flex; align-items: center; gap: 1rem;">
+        <i class="fas fa-chart-line fa-3x" style="opacity: 0.85;"></i>
+        <div>
+          <h3 style="margin: 0; font-size: 1.8rem; font-weight: 700;">1,124</h3>
+          <p style="margin: 0; font-weight: 500;">Ventas este mes</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div style="background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+      <h3 style="font-weight: 600; margin-bottom: 1rem; text-align:center;">Ventas Mensuales (Ejemplo)</h3>
+      <canvas id="chartPanel" style="max-width: 100%; height: 320px;"></canvas>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('chartPanel').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago'],
+        datasets: [{
+          label: 'Ventas',
+          data: [120, 150, 180, 170, 190, 220, 210, 230],
+          fill: true,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 3,
+          tension: 0.4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { font: { size: 14, weight: '600' } },
+            position: 'top',
+          },
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 20 }
+          }
+        }
+      }
+    });
+  </script>
+</main>
+
+    </section>
+  </main>
+</div>
+
+</body>
+</html>
